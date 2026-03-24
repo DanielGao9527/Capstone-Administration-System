@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Custom Dev Environment ###
+# 下方文件包含各开发者本地的 MySQL 真实密码，绝对不允许推送到远端 GitHub！
+application-dev.yml
+*.env

@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev # 默认激活 dev 配置文件 (application-dev.yml)
+    
+  sql:
+    init:
+      mode: always # 每次启动时运行 resources 下的 schema.sql 建表脚本
+      
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰命名自动映射
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 在控制台打印被生成的 SQL 语句，方便纠错
