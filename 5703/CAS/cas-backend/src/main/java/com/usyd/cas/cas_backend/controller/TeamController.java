@@ -54,4 +54,62 @@ public class TeamController {
         boolean removed = teamService.removeById(id);
         return removed ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
+
+    /**
+     * 将一名无组学生硬塞或自主挂载至当先的组内
+     * 业务实现：查出这名学生的 Profile 档案，赋予其该队伍的外键指针后更新入库。
+     */
+    @PostMapping("/{teamId}/join")
+    public ResponseEntity<Void> joinTeam(@PathVariable Long teamId, @RequestParam Long studentUserId) {
+        com.usyd.cas.cas_backend.entity.StudentProfile profile = studentProfileService.getOne(
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.usyd.cas.cas_backend.entity.StudentProfile>()
+                .eq(com.usyd.cas.cas_backend.entity.StudentProfile::getUserId, studentUserId)
+        );
+        if (profile == null) {
+            profile = new com.usyd.cas.cas_backend.entity.StudentProfile();
+            profile.setUserId(studentUserId);
+        }
+        profile.setTeamId(teamId);
+        studentProfileService.saveOrUpdate(profile);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 学生主动退出团队 (如果 Admin 上锁了 isLocked=true，则拒绝)
+     * 业务实现：将学生的 teamId 置为 null
+     */
+    @DeleteMapping("/{teamId}/leave")
+    public ResponseEntity<String> leaveTeam(@PathVariable Long teamId, @RequestParam Long studentUserId) {
+        Team team = teamService.getById(teamId);
+        if (team == null) return ResponseEntity.notFound().build();
+        
+        if (Boolean.TRUE.equals(team.getIsLocked())) {
+            return ResponseEntity.status(403).body("Team is locked by Admin/Tutor. You cannot leave.");
+        }
+        
+        com.usyd.cas.cas_backend.entity.StudentProfile profile = studentProfileService.getOne(
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.usyd.cas.cas_backend.entity.StudentProfile>()
+                .eq(com.usyd.cas.cas_backend.entity.StudentProfile::getUserId, studentUserId)
+        );
+        if (profile != null && profile.getTeamId() != null && profile.getTeamId().equals(teamId)) {
+            profile.setTeamId(null);
+            studentProfileService.updateById(profile);
+            return ResponseEntity.ok("Successfully left the team.");
+        }
+        return ResponseEntity.badRequest().body("Student is not in this team.");
+    }
+
+    /**
+     * 管理员锁定或解锁团队，防止学生逃跑
+     */
+    @PutMapping("/{teamId}/lock")
+    public ResponseEntity<Team> toggleTeamLock(@PathVariable Long teamId, @RequestParam boolean lockStatus) {
+        Team team = teamService.getById(teamId);
+        if (team != null) {
+            team.setIsLocked(lockStatus);
+            teamService.updateById(team);
+            return ResponseEntity.ok(team);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

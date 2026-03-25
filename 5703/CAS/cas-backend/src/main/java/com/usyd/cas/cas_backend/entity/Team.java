@@ -28,6 +28,9 @@ public class Team {
     
     /**队伍整体平均成绩分*/
     private BigDecimal averageWan;
+
+    /**防随意离队锁（Admin控）*/
+    private Boolean isLocked;
     
     /**创建时间（默认UTC存储）*/
     private LocalDateTime createdAt;
