@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input } from 'antd';
+import { Table, Button, Input, message } from 'antd';
 import { Search, Download, Filter, Play } from 'lucide-react';
+import { studentApi } from '../api/studentApi';
 
 interface Proposal {
   id: number;
@@ -13,26 +14,18 @@ const Proposals = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setProposals([
-        { 
-          id: 1, 
-          projectName: 'Trusted Online PM Resources', 
-          background: 'There are lots of PMs who share their experiences online in blog posts and articles in industry websites like LinkedIn - but they are of variable quality. How does the reader know what is reliable information and what is misleading - or just plain wrong? It is a challenge for everyone but especially for researchers who want to use these sources as a means of keeping up with changing PM practices.' 
-        },
-        { 
-          id: 2, 
-          projectName: 'Micro Credentials Survey', 
-          background: 'Micro-credentials are bite-sized chunks of education, whether an online course, bootcamp certificate or apprenticeship and may arise from a traditional university, specialty provider or online learning platform like Coursera, edX or Udacity, and also professional bodies (e.g. accounting, computing etc). Many individuals already use micro-credentials... Clearly this trend is of interest to all educational institutions.' 
-        },
-        { 
-          id: 3, 
-          projectName: 'Glebe Island Bridge', 
-          background: 'The Glebe Island Bridge was once an important means of getting to Sydney City from the west but with the newer ANZAC Bridge, it now lies idle.\n\nYet it has enormous potential offering pedestrians and cyclists a safe and picturesque alternative.' 
-        },
-      ]);
-      setLoading(false);
-    }, 500);
+    const fetchProposals = async () => {
+      try {
+        const res = await studentApi.getPublishedProposals(1, 100);
+        const list = res.data.records || res.data.content || res.data || [];
+        setProposals(list);
+      } catch (error) {
+        message.error("Failed to load global proposals.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProposals();
   }, []);
 
   const columns = [

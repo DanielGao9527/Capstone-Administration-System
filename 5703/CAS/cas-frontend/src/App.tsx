@@ -6,13 +6,12 @@ import StudentDashboard from './pages/StudentDashboard';
 import InnerLayout from './components/InnerLayout';
 import Proposals from './pages/Proposals';
 
-// Placeholder standard components
-const Placeholder = ({ title }: { title: string }) => (
-  <div className="py-12 text-center text-slate-500">
-    <h2 className="text-3xl font-bold mb-4 text-slate-700">{title}</h2>
-    <p>We are actively implementing this module interface based on your screenshots...</p>
-  </div>
-);
+// New Real Pages
+import ProfileSetup from './pages/ProfileSetup';
+import TeamHub from './pages/TeamHub';
+import Preferences from './pages/Preferences';
+import Reflections from './pages/Reflections';
+import Tips from './pages/Tips';
 
 function App() {
   return (
@@ -20,40 +19,32 @@ function App() {
       theme={{
         token: {
           colorPrimary: '#4CAF50',
-          borderRadius: 2, // Less rounded corners like the screenshots
+          borderRadius: 2,
           fontFamily: "'Segoe UI', 'Inter', -apple-system, sans-serif"
         },
       }}
     >
       <BrowserRouter>
         <Routes>
-          {/* Public Authentication Path */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
-
-          {/* Student Panel & Navigation Root */}
+          
+          {/* Main Dashboard Grid */}
           <Route path="/student" element={<StudentDashboard />} />
           
+          {/* Inner Layout Container */}
           <Route path="/student" element={<InnerLayout />}>
-            <Route path="welcome" element={<Placeholder title="Welcome Page" />} />
+            <Route path="welcome" element={<div className="py-12 text-center text-slate-500">Select a module from the top bar</div>} />
+            <Route path="profile" element={<ProfileSetup />} />
             <Route path="proposals" element={<Proposals />} />
-            <Route path="teams" element={<Placeholder title="My Capstone Team Page" />} />
-            <Route path="reflections" element={<Placeholder title="Weekly Temperature Check & Reflection" />} />
-            <Route path="submit-proposal" element={<Placeholder title="Submit Project Proposal" />} />
-            <Route path="tips" element={<Placeholder title="Tips & Tricks" />} />
+            <Route path="preferences" element={<Preferences />} />
+            <Route path="teams" element={<TeamHub />} />
+            <Route path="reflections" element={<Reflections />} />
+            <Route path="tips" element={<Tips />} />
           </Route>
 
-          {/* Tutor & Sponsor Dashboard Mock Entrances */}
-          <Route path="/admin" element={
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
-              <h1 className="text-2xl text-slate-600">Admin Control Center (To Be Built)</h1>
-            </div>
-          } />
-          <Route path="/sponsor" element={
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
-              <h1 className="text-2xl text-slate-600">Sponsor Portal (To Be Built)</h1>
-            </div>
-          } />
+          <Route path="/admin" element={<div className="min-h-screen flex items-center justify-center bg-slate-50"><h1 className="text-2xl text-slate-600">Admin Control Center (To Be Built)</h1></div>} />
+          <Route path="/sponsor" element={<div className="min-h-screen flex items-center justify-center bg-slate-50"><h1 className="text-2xl text-slate-600">Sponsor Portal (To Be Built)</h1></div>} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>

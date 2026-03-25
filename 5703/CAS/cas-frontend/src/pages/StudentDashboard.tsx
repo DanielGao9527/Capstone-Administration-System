@@ -10,7 +10,7 @@ const StudentDashboard = () => {
     { title: 'Project Proposals', icon: FileText, path: '/student/proposals' },
     { title: 'Teams', icon: Users, path: '/student/teams' },
     { title: 'Weekly Reflection', icon: CheckCircle, path: '/student/reflections' },
-    { title: 'Submit a Project Proposal', icon: UploadCloud, path: '/student/submit-proposal' },
+    { title: 'Project Preferences', icon: UploadCloud, path: '/student/preferences' },
     { title: 'Tips & Tricks', icon: Lightbulb, path: '/student/tips' },
   ];
 

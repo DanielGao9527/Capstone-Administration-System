@@ -5,11 +5,12 @@ const InnerLayout = () => {
   const navigate = useNavigate();
 
   const tabs = [
-    { name: 'Welcome', path: '/student/welcome' },
-    { name: 'Project Proposals', path: '/student/proposals' },
-    { name: 'Teams', path: '/student/teams' },
-    { name: 'Weekly Reflections', path: '/student/reflections' },
-    { name: 'Submit a Project Proposal', path: '/student/submit-proposal' },
+    { name: 'Dashboard', path: '/student' },
+    { name: 'My Profile', path: '/student/profile' },
+    { name: 'Teams Hub', path: '/student/teams' },
+    { name: 'Proposals', path: '/student/proposals' },
+    { name: 'Preferences', path: '/student/preferences' },
+    { name: 'Reflections', path: '/student/reflections' },
     { name: 'Tips & Tricks', path: '/student/tips' },
   ];
 
