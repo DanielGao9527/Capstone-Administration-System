@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    # 使用环境变量注入云端数据库地址
+    url: jdbc:mysql://${DB_HOST}:3306/cas_db?createDatabaseIfNotExist=true&useSSL=true&requireSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  
+  # 自动执行 schema.sql 建表脚本
+  sql:
+    init:
+      mode: always
+
+  # 让 Hibernate 自动根据实体类更新表结构
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
