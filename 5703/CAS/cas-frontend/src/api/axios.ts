@@ -3,7 +3,7 @@ import axios from 'axios';
 // 生产环境使用 Azure 后端域名，开发环境保持本地 localhost
 const isProd = import.meta.env.PROD;
 const baseURL = isProd 
-  ? 'https://cas-backend-team32.azurewebsites.net/api/v1' 
+  ? 'https://cas-backend-team32-h5hxfffhd7ddccav.australiaeast-01.azurewebsites.net/api/v1' 
   : 'http://localhost:8080/api/v1';
 
 const api = axios.create({
