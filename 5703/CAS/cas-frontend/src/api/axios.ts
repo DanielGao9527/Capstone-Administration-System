@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-// 生产环境使用 Azure 后端域名，开发环境保持本地 localhost
-const isProd = import.meta.env.PROD;
-const baseURL = isProd 
-  ? 'https://cas-backend-team32-h5hxfffhd7ddccav.australiaeast-01.azurewebsites.net/api/v1' 
-  : 'http://localhost:8080/api/v1';
+// 运行时检测：浏览器在 localhost 时连本地后端，否则连 Azure 后端
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const baseURL = isLocal 
+  ? 'http://localhost:8080/api/v1' 
+  : 'https://cas-backend-team32-h5hxfffhd7ddccav.australiaeast-01.azurewebsites.net/api/v1';
 
 const api = axios.create({
     baseURL,
