@@ -1,8 +1,11 @@
 package com.usyd.cas.cas_backend.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -24,13 +27,16 @@ public class User {
     // 隐藏密文密码
     private String password;
     
-    // 结构化姓名
+    @NotBlank
     private String fullName;
-    
-    // 用户在安全上下文里的权限等级：STUDENT/SPONSOR/ADMIN/TUTOR
-    private String role;
-    
-    // 创建时时间戳 (UTC)
+
+    @NotBlank
+    private String role; // "STUDENT", "SPONSOR", "TUTOR", "ADMIN"
+
+    @TableField(value = "status")
+    private String status; // "Active", "Inactive"
+
+    @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
     
     // 更新时时间戳 (UTC)

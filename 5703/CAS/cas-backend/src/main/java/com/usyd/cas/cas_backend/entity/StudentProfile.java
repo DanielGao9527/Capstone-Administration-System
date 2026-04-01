@@ -1,5 +1,6 @@
 package com.usyd.cas.cas_backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -16,13 +17,19 @@ public class StudentProfile {
     @TableId
     private Long userId;
     
-    /**学号 (UoS Code)*/
+    @TableField("uos_code")
     private String uosCode;
-    
-    /**授课模式 (Online, In-person)*/
+
+    @TableField("delivery_mode")
     private String deliveryMode;
-    
-    /**加权平均分 (WAN)*/
+
+    @TableField("degree_type")
+    private String degreeType;
+
+    @TableField("contact_email")
+    private String contactEmail;
+
+    @TableField("wan")
     private BigDecimal wan;
     
     /**所属课程ID（多课程隔离）*/

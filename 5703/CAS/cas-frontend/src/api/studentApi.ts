@@ -2,8 +2,8 @@ import api from './axios';
 
 export const studentApi = {
     // ---- Profile ----
-    getProfile: (userId: number) => api.get(`/student-profiles/${userId}`),
-    updateProfile: (data: any) => api.post('/student-profiles', data),
+    getProfile: () => api.get('/profile'),
+    updateProfile: (data: any) => api.put('/profile', data),
 
     // ---- Teams ----
     createTeam: (data: any) => api.post('/teams', data),

@@ -3,6 +3,7 @@ import { ConfigProvider, theme } from 'antd';
 import CustomCursor from './components/CustomCursor';
 import Login from './pages/Login';
 import StudentDashboard from './pages/StudentDashboard';
+import StudentWelcome from './pages/StudentWelcome';
 import InnerLayout from './components/InnerLayout';
 import Proposals from './pages/Proposals';
 
@@ -39,7 +40,8 @@ function App() {
           
           {/* Inner Layout Container */}
           <Route path="/student" element={<InnerLayout />}>
-            <Route path="welcome" element={<StudentDashboard />} />
+            <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="welcome" element={<StudentWelcome />} />
             <Route path="profile" element={<ProfileSetup />} />
             <Route path="proposals" element={<Proposals />} />
             <Route path="preferences" element={<Preferences />} />

@@ -1,6 +1,42 @@
 @import "tailwindcss";
 
-/* Typography */
+/* ========== 全局主题变量 ========== */
+:root {
+  /* 玻璃面板基础参数 */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-hover-bg: rgba(255, 255, 255, 0.07);
+  --glass-hover-border: rgba(255, 255, 255, 0.20);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* 内嵌子面板 */
+  --panel-bg: rgba(0, 0, 0, 0.30);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  /* 输入框 */
+  --input-bg: rgba(0, 0, 0, 0.30);
+  --input-border: rgba(255, 255, 255, 0.15);
+  /* 文字 */
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.50);
+  --text-muted: rgba(255, 255, 255, 0.30);
+}
+
+/* 夜间模式 — 进一步压暗所有半透明层 */
+[data-theme="night"] {
+  --glass-bg: rgba(0, 0, 0, 0.50);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-hover-bg: rgba(0, 0, 0, 0.40);
+  --glass-hover-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --panel-bg: rgba(0, 0, 0, 0.55);
+  --panel-border: rgba(255, 255, 255, 0.04);
+  --input-bg: rgba(0, 0, 0, 0.50);
+  --input-border: rgba(255, 255, 255, 0.08);
+  --text-primary: rgba(255, 255, 255, 0.80);
+  --text-secondary: rgba(255, 255, 255, 0.35);
+  --text-muted: rgba(255, 255, 255, 0.20);
+}
+
+/* ========== 全局标题字体 ========== */
 .heading {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -11,7 +47,7 @@
   font-weight: 700; letter-spacing: -0.02em; line-height: 1;
 }
 
-/* Custom Cursor */
+/* ========== 自定义光标 ========== */
 .custom-cursor {
   position: fixed;
   width: 40px; height: 40px;
@@ -40,12 +76,34 @@ body {
   color: white;
 }
 
-/* Ant Design overrides for Cursor */
+/* Ant Design 光标覆盖 */
 a, button, input, textarea, [role="button"], .ant-btn {
   cursor: none !important;
 }
 
-/* The Glass Panel Array */
+/* ========== 玻璃面板组件系统 ========== */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px; padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s ease;
+  color: var(--text-primary);
+}
+.glass-panel:hover {
+  border-color: var(--glass-hover-border);
+}
+
+/* 子面板（嵌套在 glass-panel 内） */
+.glass-sub-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+/* 登录面板专用（原 color-adjuster-panel） */
 .color-adjuster-panel {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -55,6 +113,7 @@ a, button, input, textarea, [role="button"], .ant-btn {
   transition: all 0.3s ease;
 }
 
+/* ========== 导航按钮 ========== */
 .color-btn, .export-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -72,9 +131,23 @@ a, button, input, textarea, [role="button"], .ant-btn {
   background: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.6);
 }
+
+/* 夜间模式下导航按钮也变暗 */
+[data-theme="night"] .color-btn,
+[data-theme="night"] .export-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+[data-theme="night"] .color-btn:hover,
+[data-theme="night"] .export-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+/* ========== 登录输入框 ========== */
 .panel-input {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
   color: white !important;
   font-family: "Inter", sans-serif;
   border-radius: 8px !important;
@@ -82,46 +155,17 @@ a, button, input, textarea, [role="button"], .ant-btn {
 }
 .panel-input:focus, .panel-input:hover {
   background: rgba(0, 0, 0, 0.5) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* WebGL-like Liquid Fluid Background Simulation */
-.webgl-fluid-bg {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  z-index: 0; overflow: hidden; pointer-events: none;
-  background-color: #050015; /* deep space base, dark purpleish */
+/* ========== 入场动画 ========== */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.fluid-blob {
-  position: absolute; border-radius: 50%;
-  mix-blend-mode: screen;
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out both;
 }
-.fluid-blob-1 {
-  top: -20%; left: -10%; width: 70vw; height: 70vw;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0) 70%);
-  filter: blur(60px); animation: fluid-flow-1 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-}
-.fluid-blob-2 {
-  bottom: -20%; right: -10%; width: 80vw; height: 80vw;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, rgba(14, 165, 233, 0) 70%);
-  filter: blur(80px); animation: fluid-flow-2 15s infinite alternate-reverse cubic-bezier(0.4, 0, 0.2, 1);
-}
-.fluid-blob-3 {
-  top: 20%; left: 30%; width: 60vw; height: 60vw;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.6) 0%, rgba(236, 72, 153, 0) 70%);
-  filter: blur(70px); animation: fluid-flow-3 20s infinite linear;
-}
-
-@keyframes fluid-flow-1 {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; }
-  100% { transform: translate(15vw, 15vh) scale(1.3) rotate(90deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-}
-@keyframes fluid-flow-2 {
-  0% { transform: translate(0, 0) scale(1.2) rotate(0deg); border-radius: 50% 50% 30% 70% / 50% 40% 70% 50%; }
-  100% { transform: translate(-20vw, -10vh) scale(1) rotate(-90deg); border-radius: 30% 70% 60% 40% / 40% 60% 50% 70%; }
-}
-@keyframes fluid-flow-3 {
-  0% { transform: translate(0, 0) scale(0.9) rotate(0deg); border-radius: 60% 30% 50% 50% / 50% 60% 40% 40%; }
-  50% { transform: translate(20vw, -20vh) scale(1.4) rotate(180deg); border-radius: 40% 50% 60% 40% / 60% 40% 50% 50%; }
-  100% { transform: translate(0, 0) scale(0.9) rotate(360deg); border-radius: 60% 30% 50% 50% / 50% 60% 40% 40%; }
+.fade-in-up {
+  animation: slide-up 0.5s ease-out both;
 }

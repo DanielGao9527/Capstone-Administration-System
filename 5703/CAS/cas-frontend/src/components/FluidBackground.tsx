@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
+// nightMode: true=deep blue-black night, false=Morandi day palette
+const FluidBackground = ({ nightMode = false }: { nightMode?: boolean }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<any>(null);
 
@@ -83,11 +84,11 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
           uColor4: { value: new THREE.Vector3() },
           uColor5: { value: new THREE.Vector3() },
           uColor6: { value: new THREE.Vector3() },
-          uSpeed: { value: 1.5 }, uIntensity: { value: 1.8 },
-          uTouchTexture: { value: null }, uGrainIntensity: { value: 0.08 },
+          uSpeed: { value: 1.5 }, uIntensity: { value: 1.4 },
+          uTouchTexture: { value: null }, uGrainIntensity: { value: 0.06 },
           uZoom: { value: 1.0 }, uDarkNavy: { value: new THREE.Vector3(0.01, 0.01, 0.05) },
           uGradientSize: { value: 0.45 }, uGradientCount: { value: 12.0 },
-          uColor1Weight: { value: 0.5 }, uColor2Weight: { value: 1.8 }
+          uColor1Weight: { value: 0.45 }, uColor2Weight: { value: 1.2 }
         };
       }
       init() {
@@ -219,7 +220,7 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
       scene: THREE.Scene; clock: THREE.Clock;
       touchTexture: TouchTexture; gradientBackground: GradientBackground;
       animId: number; _hR: any; _hM: any; _hT: any;
-      
+
       constructor(container: HTMLElement) {
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -233,7 +234,7 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
         this.gradientBackground = new GradientBackground(this);
         this.gradientBackground.uniforms.uTouchTexture.value = this.touchTexture.texture;
         this.animId = 0;
-        
+
         this._hR = () => {
           this.camera.aspect = window.innerWidth / window.innerHeight;
           this.camera.updateProjectionMatrix();
@@ -246,7 +247,7 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
         this._hT = (e: TouchEvent) => {
           this.touchTexture.addTouch({ x: e.touches[0].clientX / window.innerWidth, y: 1 - e.touches[0].clientY / window.innerHeight });
         };
-        
+
         this.gradientBackground.init();
         window.addEventListener("resize", this._hR);
         window.addEventListener("mousemove", this._hM);
@@ -254,20 +255,33 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
         this.tick();
       }
 
-      setColorScheme(s: number) {
+      // Set color palette based on mode
+      applyPalette(night: boolean) {
         const u = this.gradientBackground.uniforms;
-        if (s === 2) {
-          u.uColor1.value.set(0.0, 0.5, 0.4); u.uColor2.value.set(0.5, 0.1, 0.8); u.uColor3.value.set(0.1, 0.8, 0.8);
-          u.uColor4.value.set(0.2, 0.6, 0.4); u.uColor5.value.set(0.4, 0.2, 0.9); u.uColor6.value.set(0.0, 0.9, 0.7);
-        } else if (s === 3) {
-          u.uColor1.value.set(0.1, 0.8, 0.4); u.uColor2.value.set(0.0, 0.3, 0.9); u.uColor3.value.set(0.9, 0.7, 0.1);
-          u.uColor4.value.set(0.2, 0.9, 0.5); u.uColor5.value.set(0.1, 0.4, 0.8); u.uColor6.value.set(0.8, 0.8, 0.2);
-        } else if (s === 4) {
-          u.uColor1.value.set(0.8, 0.1, 0.2); u.uColor2.value.set(0.9, 0.4, 0.1); u.uColor3.value.set(0.7, 0.0, 0.6);
-          u.uColor4.value.set(0.9, 0.2, 0.3); u.uColor5.value.set(0.8, 0.5, 0.2); u.uColor6.value.set(0.8, 0.1, 0.7);
+        if (night) {
+          // Night mode: deep blue-black tones
+          u.uColor1.value.set(0.10, 0.08, 0.25);
+          u.uColor2.value.set(0.04, 0.10, 0.20);
+          u.uColor3.value.set(0.06, 0.18, 0.22);
+          u.uColor4.value.set(0.12, 0.06, 0.28);
+          u.uColor5.value.set(0.03, 0.08, 0.18);
+          u.uColor6.value.set(0.05, 0.15, 0.20);
+          u.uIntensity.value = 1.0;
+          u.uColor1Weight.value = 0.35;
+          u.uColor2Weight.value = 0.8;
+          u.uGrainIntensity.value = 0.03;
         } else {
-          u.uColor1.value.set(0.945, 0.353, 0.133); u.uColor2.value.set(0.039, 0.055, 0.153); u.uColor3.value.set(0.251, 0.878, 0.816);
-          u.uColor4.value.set(0.945, 0.353, 0.133); u.uColor5.value.set(0.039, 0.055, 0.153); u.uColor6.value.set(0.251, 0.878, 0.816);
+          // Day mode: Morandi palette — muted, low-saturation, elegant
+          u.uColor1.value.set(0.72, 0.55, 0.55); // dusty rose
+          u.uColor2.value.set(0.55, 0.62, 0.55); // sage green
+          u.uColor3.value.set(0.62, 0.58, 0.52); // warm taupe
+          u.uColor4.value.set(0.50, 0.55, 0.68); // muted blue
+          u.uColor5.value.set(0.65, 0.55, 0.65); // soft lavender
+          u.uColor6.value.set(0.58, 0.60, 0.50); // dusty olive
+          u.uIntensity.value = 1.3;
+          u.uColor1Weight.value = 0.45;
+          u.uColor2Weight.value = 1.0;
+          u.uGrainIntensity.value = 0.05;
         }
       }
 
@@ -298,13 +312,16 @@ const FluidBackground = ({ scheme = 1 }: { scheme?: number }) => {
     }
 
     appRef.current = new AppManager(mountRef.current);
-    
+
     return () => { appRef.current?.dispose(); };
   }, []);
 
+  // Apply palette on mount and when nightMode changes
   useEffect(() => {
-    if (appRef.current) appRef.current.setColorScheme(scheme);
-  }, [scheme]);
+    if (appRef.current) {
+      appRef.current.applyPalette(nightMode);
+    }
+  }, [nightMode]);
 
   return <div ref={mountRef} id="webGLApp" className="fixed top-0 left-0 w-full h-full -z-10" />;
 };

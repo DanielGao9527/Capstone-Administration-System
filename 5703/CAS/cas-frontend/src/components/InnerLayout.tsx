@@ -1,12 +1,52 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { LogoutOutlined, HomeOutlined, TeamOutlined, ProfileOutlined } from '@ant-design/icons';
+import { LogoutOutlined, HomeOutlined, ProfileOutlined } from '@ant-design/icons';
 import { ConfigProvider, theme } from 'antd';
 import FluidBackground from './FluidBackground';
+
+// 夜间模式持久化 key
+const NIGHT_MODE_KEY = 'cas_night_mode';
 
 const InnerLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // ---- 夜间模式状态管理 ----
+  const [nightMode, setNightMode] = useState(() => {
+    // 优先读取用户手动设定
+    const stored = localStorage.getItem(NIGHT_MODE_KEY);
+    if (stored !== null) return stored === 'true';
+    // 否则跟随系统偏好
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  });
+
+  // 监听系统偏好变化（仅在用户未手动设定时生效）
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      if (localStorage.getItem(NIGHT_MODE_KEY) === null) {
+        setNightMode(e.matches);
+      }
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // 同步 data-theme 到 body
+  useEffect(() => {
+    if (nightMode) {
+      document.body.setAttribute('data-theme', 'night');
+    } else {
+      document.body.removeAttribute('data-theme');
+    }
+  }, [nightMode]);
+
+  // 用户手动切换
+  const toggleNightMode = () => {
+    const next = !nightMode;
+    setNightMode(next);
+    localStorage.setItem(NIGHT_MODE_KEY, String(next));
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('cas_token');
@@ -14,44 +54,40 @@ const InnerLayout = () => {
     navigate('/login');
   };
 
-  const getRole = () => localStorage.getItem('cas_role');
-  const role = getRole();
-  let activeScheme = 1;
-  if (location.pathname.includes('team_hub')) activeScheme = 2;
-  else if (location.pathname.includes('preferences')) activeScheme = 3;
-  else if (location.pathname.includes('reflections')) activeScheme = 4;
+  const role = localStorage.getItem('cas_role');
 
   return (
     <div className="min-h-screen relative overflow-hidden font-sans text-white">
-      {/* Real Interactive WebGL Background dynamically colored by route */}
-      <FluidBackground scheme={activeScheme} />
+      {/* WebGL fluid background — only nightMode, no per-page scheme */}
+      <FluidBackground nightMode={nightMode} />
 
-      {/* Floating navigation panel imitating .color-controls */}
+      {/* 顶部浮动导航栏 */}
       <div className="fixed top-6 right-6 z-50 flex gap-4">
         {role === 'STUDENT' && (
           <>
             <button 
-              className={`color-btn flex items-center gap-2 ${location.pathname.includes('/student/welcome') ? 'active' : ''}`}
-              onClick={() => navigate('/student/welcome')}
+              className={`color-btn flex items-center gap-2 ${location.pathname.includes('/student/dashboard') ? 'active' : ''}`}
+              onClick={() => navigate('/student/dashboard')}
             >
-              <HomeOutlined /> HOME
+              <HomeOutlined /> DASHBOARD
             </button>
             <button 
-              className={`color-btn flex items-center gap-2 ${location.pathname.includes('/student/team_hub') ? 'active' : ''}`}
-              onClick={() => navigate('/student/team_hub')}
+              className={`color-btn flex items-center gap-2 ${location.pathname.includes('/student/profile') ? 'active' : ''}`}
+              onClick={() => navigate('/student/profile')}
             >
-              <TeamOutlined /> ROSTER
-            </button>
-            <button 
-              className={`color-btn flex items-center gap-2 ${location.pathname.includes('/student/reflections') ? 'active' : ''}`}
-              onClick={() => navigate('/student/reflections')}
-            >
-              <ProfileOutlined /> LOGOUT
+              <ProfileOutlined /> PROFILE
             </button>
           </>
         )}
         
-        {/* Extensibility for tutor/admin... */}
+        {/* 夜间模式切换按钮 */}
+        <button 
+          onClick={toggleNightMode}
+          className="color-btn flex items-center gap-2 px-4"
+          title={nightMode ? '切换到标准模式' : '切换到夜间模式'}
+        >
+          {nightMode ? '☀️' : '🌙'}
+        </button>
 
         <button 
           onClick={handleLogout}

@@ -7,7 +7,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        // 读取登录时存储的 JWT 令牌（key 必须与 Login.tsx 中 setItem 的 key 一致）
+        const token = localStorage.getItem('cas_token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }

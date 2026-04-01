@@ -26,6 +26,54 @@ public class Team {
     /**分配的项目提案ID*/
     private Long projectAssignedId;
     
+    /**授课或执行模式 (CC, remote RE等)*/
+    private String mode;
+
+    /**POC 电子邮件*/
+    private String pocEmail;
+
+    /**球队规模*/
+    private Integer teamSize;
+
+    /**潜力*/
+    private String potential;
+
+    /**当前问题*/
+    private String currentIssue;
+
+    /**教官-1*/
+    private String instructorOne;
+
+    /**议题优先级*/
+    private String issuePriority;
+
+    /**团队会议时间*/
+    private String teamMeeting;
+
+    /**项目接受状态*/
+    private String projectAcceptance;
+
+    /**团队活动*/
+    private String teamActivity;
+
+    /**赞助商联系情况*/
+    private Boolean sponsorContacted;
+
+    /**是否见过赞助商*/
+    private Boolean metSponsor;
+
+    /**产品信心级别*/
+    private String productConfidence;
+
+    /**需要原型开发帮助*/
+    private Boolean needHelpWithPrototype;
+
+    /**团队公开信息或备注*/
+    private String teamMessage;
+
+    /**球队状态*/
+    private String teamStatus;
+
     /**队伍整体平均成绩分*/
     private BigDecimal averageWan;
 

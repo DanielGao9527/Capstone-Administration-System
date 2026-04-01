@@ -1,10 +1,10 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, FileText, Users, CheckCircle, FilePlus, Lightbulb } from 'lucide-react';
 
-const glassPanel = "group bg-white/5 hover:bg-white/10 backdrop-blur-[20px] border border-white/20 hover:border-white/40 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-500 cursor-pointer flex flex-col items-center justify-center gap-6 animate-slide-up h-64";
-const iconStyle = "text-white/80 group-hover:text-cyan-400 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_20px_rgba(34,211,238,0.6)]";
-const titleStyle = "font-['Syne'] text-2xl font-bold text-white tracking-widest uppercase text-center group-hover:text-cyan-100 transition-colors";
+// Dashboard 卡片样式 — 使用 CSS 变量实现夜间模式联动
+const glassPanel = "group bg-[var(--glass-bg)] hover:bg-[var(--glass-hover-bg)] backdrop-blur-[20px] border border-[var(--glass-border)] hover:border-[var(--glass-hover-border)] rounded-3xl p-8 shadow-[var(--glass-shadow)] transition-all duration-500 cursor-pointer flex flex-col items-center justify-center gap-6 animate-slide-up h-64";
+const iconStyle = "text-white/70 group-hover:text-cyan-400 group-hover:scale-110 transition-transform duration-500";
+const titleStyle = "font-['Syne'] text-2xl font-bold text-[var(--text-primary)] tracking-widest uppercase text-center group-hover:text-cyan-100 transition-colors";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -12,10 +12,10 @@ const StudentDashboard = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 h-full min-h-[80vh] flex flex-col justify-center">
       <div className="text-center mb-16 animate-slide-up">
-        <h1 className="font-['Syne'] text-5xl md:text-7xl font-bold text-white tracking-widest uppercase mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+        <h1 className="font-['Syne'] text-5xl md:text-7xl font-bold text-[var(--text-primary)] tracking-widest uppercase mb-4">
           Operations
         </h1>
-        <p className="text-white/60 font-['Inter'] tracking-[0.2em] uppercase text-sm md:text-base">
+        <p className="text-[var(--text-secondary)] font-['Inter'] tracking-[0.2em] uppercase text-sm md:text-base">
           Efficient tools for Capstone Operations
         </p>
       </div>

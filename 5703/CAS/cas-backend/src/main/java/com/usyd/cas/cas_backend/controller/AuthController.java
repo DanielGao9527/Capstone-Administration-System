@@ -49,22 +49,30 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        String role = userDetails.getAuthorities().iterator().next().getAuthority();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("token", jwt);
-        body.put("id", userDetails.getId());
-        body.put("email", userDetails.getUsername());
-        body.put("role", role.replace("ROLE_", ""));
+            Map<String, Object> body = new HashMap<>();
+            body.put("token", jwt);
+            body.put("id", userDetails.getId());
+            body.put("email", userDetails.getUsername());
+            body.put("role", role.replace("ROLE_", ""));
 
-        return ResponseEntity.ok(body);
+            return ResponseEntity.ok(body);
+        } catch (org.springframework.security.authentication.DisabledException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN)
+                                 .body("Account Disabled: 此账号已被停用，请联系管理员处理。");
+        } catch (org.springframework.security.core.AuthenticationException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED)
+                                 .body("Authentication Failed: 账号或密码错误。");
+        }
     }
     
     // API Endpoint specifically meant for test seeding users rapidly.

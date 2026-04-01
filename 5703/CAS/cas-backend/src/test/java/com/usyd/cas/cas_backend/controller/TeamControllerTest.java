@@ -1,6 +1,6 @@
 package com.usyd.cas.cas_backend.controller;
 
-import com.usyd.cas.cas_backend.entity.StudentProfile;
+import com.usyd.cas.cas_backend.entity.dto.StudentProfileDTO;
 import com.usyd.cas.cas_backend.entity.Team;
 import com.usyd.cas.cas_backend.entity.dto.TeamWithMembersDTO;
 import com.usyd.cas.cas_backend.service.TeamService;
@@ -43,7 +43,7 @@ class TeamControllerTest {
         dto.setTeamName("Alpha Team");
         dto.setTeamLetter("A");
         
-        StudentProfile student = new StudentProfile();
+        StudentProfileDTO student = new StudentProfileDTO();
         student.setUserId(100L);
         student.setUosCode("400123456");
         dto.setMembers(Collections.singletonList(student));

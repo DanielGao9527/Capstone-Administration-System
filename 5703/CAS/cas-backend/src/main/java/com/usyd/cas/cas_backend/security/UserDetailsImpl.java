@@ -14,14 +14,16 @@ public class UserDetailsImpl implements UserDetails {
     private String email;
     private String password;
     private String fullName;
+    private String status;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String password, String fullName,
+    public UserDetailsImpl(Long id, String email, String password, String fullName, String status,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.status = status;
         this.authorities = authorities;
     }
 
@@ -32,6 +34,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getFullName(),
+                user.getStatus(),
                 Collections.singletonList(authority));
     }
 
@@ -51,5 +54,5 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() { return true; }
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() { return "Active".equalsIgnoreCase(status); }
 }
