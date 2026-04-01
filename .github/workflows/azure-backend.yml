@@ -15,6 +15,23 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up JDK 21
+name: CAS Backend CI/CD - Azure
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '5703/CAS/cas-backend/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -25,9 +42,12 @@ jobs:
         run: mvn clean package -DskipTests
         working-directory: 5703/CAS/cas-backend
 
+      - name: Prepare Jar for Deployment
+        run: cp 5703/CAS/cas-backend/target/*.jar ./app.jar
+
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'cas-backend-team32'
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
-          package: '5703/CAS/cas-backend/target/*.jar'
+          package: 'app.jar'
