@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spin, Tag } from 'antd';
 import { Database, FileText, Globe, Target, UserCheck } from 'lucide-react';
 import { studentApi } from '../api/studentApi';

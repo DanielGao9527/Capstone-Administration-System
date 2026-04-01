@@ -1,4 +1,3 @@
-import React from 'react';
 import { Database, ShieldCheck, Zap } from 'lucide-react';
 
 const StudentWelcome = () => {

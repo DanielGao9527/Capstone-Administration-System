@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertTriangle, Clock, Activity, CheckCircle2 } from 'lucide-react';
 
 const Dashboard = () => {
