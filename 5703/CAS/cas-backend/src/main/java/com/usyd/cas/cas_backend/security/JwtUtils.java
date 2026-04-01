@@ -12,10 +12,11 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    // 开发演示固定混淆字，实盘中应转入 application.yml 的环境变量内
-    private String jwtSecret = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-    // 24小时有效
-    private int jwtExpirationMs = 86400000;
+    @org.springframework.beans.factory.annotation.Value("${cas.jwt.secret}")
+    private String jwtSecret;
+
+    @org.springframework.beans.factory.annotation.Value("${cas.jwt.expiration-ms}")
+    private int jwtExpirationMs;
 
     private SecretKey key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));

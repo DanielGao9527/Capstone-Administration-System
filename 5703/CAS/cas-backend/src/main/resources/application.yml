@@ -7,6 +7,12 @@ spring:
       mode: always # 强制初始化
       schema-locations: classpath:schema.sql # 显式引导点火路径
       
+cas:
+  jwt:
+    # 优先从环境变量 JWT_SECRET 读取，若无则使用开发默认值 (应避免生产环境泄露)
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration-ms: 86400000 # 24小时
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
