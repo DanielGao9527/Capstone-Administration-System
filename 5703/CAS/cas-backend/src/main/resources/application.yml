@@ -4,7 +4,8 @@ spring:
     
   sql:
     init:
-      mode: always # 每次启动时运行 resources 下的 schema.sql 建表脚本
+      mode: always # 强制初始化
+      schema-locations: classpath:schema.sql # 显式引导点火路径
       
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
