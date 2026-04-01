@@ -1,0 +1,16 @@
+# 这个文件包含了敏感密码，我们马上会将其加入 .gitignore 防止被提交到 GitHub 上
+spring:
+  datasource:
+    # 默认指向您的 Azure 云端数据库
+    url: jdbc:mysql://${DB_HOST:cas-db-server-team32.mysql.database.azure.com}:3306/cas_db?createDatabaseIfNotExist=true&useSSL=true&requireSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    # 建议使用云端创建的用户名，如 casadmin
+    username: ${DB_USER:casadmin}
+    # 密码建议通过环境变量注入，不要写死在代码里提交到仓库
+    password: ${DB_PASS}
+  sql:
+    init:
+      mode: always # 强制执行 schema.sql 建表
+      platform: mysql
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 在日志流里打印 SQL 方便排查
