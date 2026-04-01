@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Select, Button, message, Spin, Result } from 'antd';
-import { Target, AlertCircle } from 'lucide-react';
+import { Target, AlertCircle, AlertTriangle } from 'lucide-react';
 import { studentApi } from '../api/studentApi';
+
+const glassPanel = "bg-white/5 backdrop-blur-[25px] border border-white/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] relative z-10 text-white animate-slide-up w-full";
+const exportBtn = "bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white font-['Syne'] text-sm font-medium tracking-wide uppercase transition-all duration-300 flex items-center justify-center gap-2 w-full disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
 
 const Preferences = () => {
     const [loading, setLoading] = useState(true);
@@ -29,7 +32,6 @@ const Preferences = () => {
                 const projectList = propRes.data.records || propRes.data.content || propRes.data || [];
                 setProposals(projectList);
 
-                // Populate existing preferences if any
                 const existingPrefs = prefRes.data;
                 if (existingPrefs && existingPrefs.length > 0) {
                     const mappedValues: any = {};
@@ -46,18 +48,15 @@ const Preferences = () => {
         }
     };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    useEffect(() => { fetchData(); }, []);
 
     const onFinish = async (values: any) => {
         if (!teamId) return;
         
-        // Ensure no duplicate selections across pref1, pref2, pref3
         const selected = [values.pref1, values.pref2, values.pref3].filter(Boolean);
         const uniqueSelected = new Set(selected);
         if (selected.length !== uniqueSelected.size) {
-            message.error("You cannot select the same proposal multiple times!");
+            message.error("Overlapping targets detected. Diversify directives.");
             return;
         }
 
@@ -69,10 +68,10 @@ const Preferences = () => {
         setSubmitting(true);
         try {
             await studentApi.submitPreferences(teamId, payload);
-            message.success('Project preferences submitted successfully!');
+            message.success('Target vectors locked successfully!');
             fetchData();
         } catch (error) {
-            message.error('Failed to submit preferences.');
+            message.error('Transmission failed.');
         } finally {
             setSubmitting(false);
         }
@@ -82,62 +81,67 @@ const Preferences = () => {
 
     if (!teamId) {
         return (
-            <div className="bg-white p-12 rounded-xl shadow-sm border border-slate-200 text-center mt-4">
-                <Result 
-                    icon={<AlertCircle size={64} className="mx-auto text-orange-400 mb-4" />}
-                    title="You Are Not In A Team"
-                    subTitle="Project preferences are submitted collectively as a team. Please navigate to the Team Hub and either join an existing team or create a new one to unlock this feature."
-                />
+            <div className="max-w-2xl mx-auto mt-20 px-6">
+                <div className={`${glassPanel} flex flex-col items-center text-center justify-center p-16`}>
+                    <AlertTriangle size={64} className="text-orange-400 mb-6 drop-shadow-[0_0_15px_rgba(251,146,60,0.6)] animate-pulse" />
+                    <h2 className="font-['Syne'] text-3xl font-bold text-white uppercase tracking-widest mb-4">Ballot Locked</h2>
+                    <p className="text-white/60 font-['Inter'] tracking-wider leading-relaxed max-w-md mx-auto">
+                        Target acquisition requires active node operation. Return to Squad Array and establish an uplink first.
+                    </p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-2xl mx-auto mt-4">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                <div className="mb-8 border-b border-slate-100 pb-5">
-                    <h2 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                        <Target className="text-[#4CAF50]" /> Submit Team Preferences
+        <div className="max-w-2xl mx-auto mt-12 px-6">
+            <div className={glassPanel}>
+                <div className="mb-12 border-b border-white/10 pb-6 text-center">
+                    <h2 className="font-['Syne'] text-4xl font-bold text-white tracking-widest uppercase flex items-center justify-center gap-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                        <Target className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]" size={40} /> 
+                        Operation Ballot
                     </h2>
-                    <p className="text-slate-500 mt-2">Rank your team's top 3 projects from the published proposals directory.</p>
+                    <p className="text-white/50 font-['Inter'] mt-4 uppercase tracking-[0.2em] text-sm">Designate Core Mission Vectors</p>
                 </div>
 
-                <Form layout="vertical" form={form} onFinish={onFinish} requiredMark={false}>
-                    <Form.Item name="pref1" label={<span className="font-semibold text-slate-700">1st Preference (Primary)</span>} rules={[{ required: true, message: 'Primary preference is required' }]}>
+                <Form layout="vertical" form={form} onFinish={onFinish} requiredMark={false} className="space-y-6">
+                    <Form.Item name="pref1" label={<span className="text-emerald-300 font-['Syne'] uppercase tracking-[0.15em] font-bold text-sm">Primary Coordinate (1st)</span>} rules={[{ required: true, message: 'Primary vector required' }]}>
                         <Select 
                             size="large" 
-                            placeholder="Select your top choice..."
-                            options={proposals.map(p => ({ label: p.projectName, value: p.id }))}
+                            placeholder="AWAITING SELECTION..."
+                            options={proposals.map(p => ({ label: `[${p.id}] ${p.projectName}`, value: p.id }))}
+                            className="font-['Inter']"
                         />
                     </Form.Item>
 
-                    <Form.Item name="pref2" label={<span className="font-semibold text-slate-700">2nd Preference</span>}>
-                        <Select 
-                            allowClear
-                            size="large" 
-                            placeholder="Select your backup choice..."
-                            options={proposals.map(p => ({ label: p.projectName, value: p.id }))}
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="pref3" label={<span className="font-semibold text-slate-700">3rd Preference</span>}>
+                    <Form.Item name="pref2" label={<span className="text-emerald-300/80 font-['Syne'] uppercase tracking-[0.15em] font-bold text-sm">Secondary Coordinate (2nd)</span>}>
                         <Select 
                             allowClear
                             size="large" 
-                            placeholder="Select your last resort choice..."
-                            options={proposals.map(p => ({ label: p.projectName, value: p.id }))}
+                            placeholder="AWAITING SELECTION..."
+                            options={proposals.map(p => ({ label: `[${p.id}] ${p.projectName}`, value: p.id }))}
+                            className="font-['Inter']"
                         />
                     </Form.Item>
 
-                    <Form.Item className="mt-10 mb-0">
-                        <Button 
-                            type="primary" 
-                            htmlType="submit" 
-                            loading={submitting}
-                            className="w-full h-12 bg-[#4CAF50] hover:bg-[#43a047] text-lg font-medium rounded-lg border-0"
+                    <Form.Item name="pref3" label={<span className="text-emerald-300/60 font-['Syne'] uppercase tracking-[0.15em] font-bold text-sm">Tertiary Coordinate (3rd)</span>}>
+                        <Select 
+                            allowClear
+                            size="large" 
+                            placeholder="AWAITING SELECTION..."
+                            options={proposals.map(p => ({ label: `[${p.id}] ${p.projectName}`, value: p.id }))}
+                            className="font-['Inter']"
+                        />
+                    </Form.Item>
+
+                    <Form.Item className="mt-12 mb-0">
+                        <button 
+                            type="submit" 
+                            className={`${exportBtn} !bg-emerald-500/10 !border-emerald-500/40 !text-emerald-300 hover:!bg-emerald-500/20 py-4 text-base`}
+                            disabled={submitting}
                         >
-                            Confirm Team Preferences
-                        </Button>
+                            <Target size={18} /> INITIATE LOCK
+                        </button>
                     </Form.Item>
                 </Form>
             </div>

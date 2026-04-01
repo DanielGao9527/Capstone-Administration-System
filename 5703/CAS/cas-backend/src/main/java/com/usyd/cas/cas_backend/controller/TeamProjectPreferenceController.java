@@ -18,13 +18,27 @@ public class TeamProjectPreferenceController {
     @Autowired
     private TeamProjectPreferenceService preferenceService;
 
+    @Autowired
+    private com.usyd.cas.cas_backend.service.TeamService teamService;
+
     /**
      * 为指定队伍投递多个优先级的项目志愿
      */
     @PostMapping("/team/{teamId}")
-    public ResponseEntity<List<TeamProjectPreference>> submitPreferences(
+    public ResponseEntity<?> submitPreferences(
             @PathVariable Long teamId,
+            @RequestParam Long operatorId,
             @RequestBody List<TeamProjectPreference> preferences) {
+
+        com.usyd.cas.cas_backend.entity.Team team = teamService.getById(teamId);
+        if (team == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // --- 核心业务断言：仅队伍联络人 (Point of Contact) 有权提交偏好志愿 ---
+        if (team.getPointOfContactId() == null || !team.getPointOfContactId().equals(operatorId)) {
+            return ResponseEntity.status(403).body("403 Forbidden: You are not the designated point of contact for this team. Voting is disabled.");
+        }
             
         // 抹除旧的志愿清单
         preferenceService.remove(new QueryWrapper<TeamProjectPreference>().eq("team_id", teamId));

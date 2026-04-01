@@ -18,6 +18,9 @@ public class WeeklyReflection {
 
     private Long userId;
 
+    /**所属课程ID*/
+    private Long courseId;
+
     private Long teamId;
 
     private Integer weekNumber;
@@ -29,6 +32,9 @@ public class WeeklyReflection {
     private String projectDisposition;
 
     private String reflectionDetails;
+
+    /** 每周进度报告 */
+    private String statusReport;
 
     private LocalDateTime createdAt;
 

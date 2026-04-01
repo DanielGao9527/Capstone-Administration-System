@@ -1,46 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Input, Button, Radio, message, Alert, Tabs } from 'antd';
-import { UserOutlined, LockOutlined, IdcardOutlined } from '@ant-design/icons';
+import { Input, message, Alert } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import FluidBackground from '../components/FluidBackground';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('login');
   
-  const [email, setEmail] = useState('student@sydney.edu.au');
-  const [password, setPassword] = useState('password123');
-  const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState('STUDENT');
-  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // 回显上次成功登录账号
+  useEffect(() => {
+    const lastEmail = localStorage.getItem('last_cas_email');
+    if (lastEmail) {
+      setEmail(lastEmail);
+    }
+  }, []);
+
   const handleAuth = async () => {
+    if (!email || !password) {
+      setErrorMsg('Please enter both identifier and passcode.');
+      return;
+    }
+
     setLoading(true);
     setErrorMsg('');
     try {
-      if (activeTab === 'login') {
-        const resp = await axios.post('http://localhost:8080/api/v1/auth/login', { email, password });
-        const returnedRole = resp.data.role;
-        localStorage.setItem('cas_token', resp.data.token);
-        localStorage.setItem('cas_role', returnedRole);
-        message.success('登录成功！已获取系统凭证。');
-        
-        if (returnedRole === 'STUDENT') navigate('/student');
-        else navigate('/' + returnedRole.toLowerCase());
-      } else {
-        await axios.post('http://localhost:8080/api/v1/auth/register', { email, password, fullName, role });
-        message.success('账户创建成功！您可以直接登录了。');
-        setActiveTab('login');
-      }
+      const resp = await axios.post('http://localhost:8080/api/v1/auth/login', { email, password });
+      const returnedRole = resp.data.role;
+      
+      localStorage.setItem('cas_token', resp.data.token);
+      localStorage.setItem('cas_role', returnedRole);
+      localStorage.setItem('last_cas_email', email);
+      message.success('Authentication sequence completed.');
+      
+      if (returnedRole === 'STUDENT') navigate('/student/welcome');
+      else navigate(`/${returnedRole.toLowerCase()}`);
     } catch (err: any) {
       if (err.response && err.response.data && typeof err.response.data === 'string') {
         setErrorMsg(err.response.data);
       } else if (err.response && err.response.status === 401) {
-        setErrorMsg('账号或密码不匹配，请重试。');
+        setErrorMsg('Denial: Identifier or passcode anomaly detected.');
       } else {
-        setErrorMsg('Network error: Does Spring Boot running on port 8080?');
+        setErrorMsg('Fatal: Core authentication network unreachable.');
       }
     } finally {
       setLoading(false);
@@ -48,82 +54,68 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 relative font-sans">
-      <div className="absolute top-0 w-full h-[32vh] bg-[#4CAF50] z-0"></div>
+    <div className="min-h-screen relative font-sans overflow-hidden">
+      {/* Fluid WebGL Component interacting with cursor drops */}
+      <FluidBackground />
 
-      <Card className="w-full max-w-[420px] shadow-xl border-none z-10 rounded-sm">
-        <div className="text-center mb-6 pt-4">
-          <h1 className="text-xl font-semibold text-slate-800 mb-1">Capstone Administration System</h1>
-          <p className="text-slate-500 text-sm">Please authenticate to continue</p>
-        </div>
+      {/* Massive Typography Centered Canvas - OFFSET LEFT to prevent panel overlap */}
+      <h1 className="heading z-10 select-none hidden md:block" style={{ left: '33%', transform: 'translate(-50%, -50%)' }}>
+        SYDNEY CAS
+      </h1>
+      <h1 className="heading z-10 select-none md:hidden" style={{ top: '25%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3.5rem' }}>
+        CAS
+      </h1>
 
-        {errorMsg && (
-          <Alert message={errorMsg} type="error" showIcon className="mb-4 text-xs" />
-        )}
-
-        <Tabs 
-          activeKey={activeTab} 
-          onChange={setActiveTab} 
-          centered
-          items={[
-            { key: 'login', label: 'Sign In' },
-            { key: 'register', label: 'Create Account' }
-          ]}
-        />
-
-        <div className="space-y-4 mt-2">
-          {activeTab === 'register' && (
-            <Input 
-              size="large" 
-              placeholder="Your Full Name" 
-              prefix={<IdcardOutlined className="text-slate-400 mr-1" />} 
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="rounded-sm h-11 text-[13px]"
-            />
-          )}
-
-          <Input 
-            size="large" 
-            placeholder="Unikey / Institutional Email" 
-            prefix={<UserOutlined className="text-slate-400 mr-1" />} 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="rounded-sm h-11 text-[13px]"
-          />
-          <Input.Password 
-            size="large" 
-            placeholder="Password" 
-            prefix={<LockOutlined className="text-slate-400 mr-1" />} 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onPressEnter={handleAuth}
-            className="rounded-sm h-11 text-[13px]"
-          />
+      {/* Reutilized WebGL/Color-Adjuster Panel for Login */}
+      <div className="fixed top-1/2 right-6 md:right-24 transform -translate-y-1/2 z-20 w-full max-w-[360px]">
+        <div className="color-adjuster-panel">
           
-          {activeTab === 'register' && (
-            <div className="pt-2 pb-2">
-              <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Select Role Type:</p>
-              <Radio.Group onChange={(e) => setRole(e.target.value)} value={role} className="flex justify-between w-full">
-                <Radio value="STUDENT"><span className="text-[13px] text-slate-600">Student</span></Radio>
-                <Radio value="ADMIN"><span className="text-[13px] text-slate-600">Admin</span></Radio>
-                <Radio value="SPONSOR"><span className="text-[13px] text-slate-600">Sponsor</span></Radio>
-              </Radio.Group>
-            </div>
+          <div className="border-b border-white/10 pb-4 mb-6">
+            <h2 className="text-white font-['Syne'] text-lg font-bold letter-spacing-wide uppercase">System Access</h2>
+            <p className="text-[#86868b] text-[12px] mt-1 font-['Inter']">Establish bi-directional auth connection</p>
+          </div>
+
+          {errorMsg && (
+            <Alert message={errorMsg} type="error" showIcon className="mb-6 bg-red-950/30 border-red-900/50 text-red-200" />
           )}
 
-          <Button 
-            type="primary" 
-            size="large" 
-            block 
+          <div className="space-y-6 mb-8">
+            <div>
+              <label className="block text-white font-['Syne'] text-[11px] uppercase tracking-[0.1em] mb-2 opacity-80">Identifier</label>
+              <Input 
+                size="large" 
+                placeholder="Unikey / Institutional Email" 
+                prefix={<UserOutlined className="text-white/50 mr-2" />} 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="panel-input h-11 text-[13px]"
+                onPressEnter={handleAuth}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-white font-['Syne'] text-[11px] uppercase tracking-[0.1em] mb-2 opacity-80">Passcode</label>
+              <Input.Password 
+                size="large" 
+                placeholder="Secure Password" 
+                prefix={<LockOutlined className="text-white/50 mr-2" />} 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onPressEnter={handleAuth}
+                className="panel-input h-11 text-[13px]"
+              />
+            </div>
+          </div>
+          
+          <button 
             onClick={handleAuth}
-            loading={loading}
-            className="bg-[#4CAF50] hover:bg-[#388E3C] border-none mt-2 h-11 rounded-sm font-semibold text-sm tracking-wide"
+            disabled={loading || !email || !password}
+            className="w-full export-btn h-11 flex items-center justify-center disabled:opacity-50"
           >
-            {activeTab === 'login' ? 'Proceed & Sign in' : 'Register Now'}
-          </Button>
+            {loading ? 'AUTHENTICATING...' : 'INITIALIZE'}
+          </button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

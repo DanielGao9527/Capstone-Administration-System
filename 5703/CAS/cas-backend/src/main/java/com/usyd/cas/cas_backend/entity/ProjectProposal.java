@@ -35,6 +35,9 @@ public class ProjectProposal {
     /**成功衡量标准*/
     private String successMeasures;
     
+    /**所属课程ID（多课程隔离）*/
+    private Long courseId;
+    
     /**所需技能*/
     private String skillsRequired;
     

@@ -1,52 +1,55 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, FileText, Users, CheckCircle, UploadCloud, Lightbulb } from 'lucide-react';
+import { Send, FileText, Users, CheckCircle, FilePlus, Lightbulb } from 'lucide-react';
+
+const glassPanel = "group bg-white/5 hover:bg-white/10 backdrop-blur-[20px] border border-white/20 hover:border-white/40 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-500 cursor-pointer flex flex-col items-center justify-center gap-6 animate-slide-up h-64";
+const iconStyle = "text-white/80 group-hover:text-cyan-400 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_20px_rgba(34,211,238,0.6)]";
+const titleStyle = "font-['Syne'] text-2xl font-bold text-white tracking-widest uppercase text-center group-hover:text-cyan-100 transition-colors";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
 
-  const cards = [
-    { title: 'Welcome', icon: Send, path: '/student/welcome' },
-    { title: 'Project Proposals', icon: FileText, path: '/student/proposals' },
-    { title: 'Teams', icon: Users, path: '/student/teams' },
-    { title: 'Weekly Reflection', icon: CheckCircle, path: '/student/reflections' },
-    { title: 'Project Preferences', icon: UploadCloud, path: '/student/preferences' },
-    { title: 'Tips & Tricks', icon: Lightbulb, path: '/student/tips' },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#f4f6f8] flex flex-col items-center pt-24 px-4 font-sans">
-      <div className="text-center mb-16 relative w-full max-w-5xl">
-        <h1 className="text-[3.5rem] font-bold text-[#0f172a] mb-2 tracking-tight">Student</h1>
-        <p className="text-xl text-[#334155]">Efficient tools for Capstone students</p>
-        
-        {/* Abstract back button / logout */}
-        <button 
-          onClick={() => navigate('/login')}
-          className="absolute top-2 right-4 w-10 h-10 rounded-full border border-[#7b9af5] text-[#7b9af5] flex items-center justify-center hover:bg-blue-50 transition-colors"
-          title="Sign Out"
-        >
-          <span className="text-xl leading-none">&larr;</span>
-        </button>
+    <div className="max-w-7xl mx-auto px-6 h-full min-h-[80vh] flex flex-col justify-center">
+      <div className="text-center mb-16 animate-slide-up">
+        <h1 className="font-['Syne'] text-5xl md:text-7xl font-bold text-white tracking-widest uppercase mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+          Operations
+        </h1>
+        <p className="text-white/60 font-['Inter'] tracking-[0.2em] uppercase text-sm md:text-base">
+          Efficient tools for Capstone Operations
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl w-full">
-        {cards.map((card) => {
-          const Icon = card.icon;
-          return (
-            <div 
-              key={card.title}
-              onClick={() => navigate(card.path)}
-              className="bg-white py-12 px-6 rounded-sm shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 flex flex-col items-center justify-center text-center group"
-            >
-              <Icon 
-                strokeWidth={1.5} 
-                className="w-16 h-16 text-[#5c6bc0] mb-6 group-hover:scale-[1.05] transition-transform duration-200" 
-              />
-              <h3 className="text-[1.1rem] text-[#334155]">{card.title}</h3>
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+        <div className={glassPanel} onClick={() => navigate('/student/welcome')} style={{ animationDelay: '0.1s' }}>
+          <Send size={56} className={`${iconStyle} group-hover:text-blue-400`} />
+          <h2 className={`${titleStyle} group-hover:text-blue-100`}>Welcome</h2>
+        </div>
+        
+        <div className={glassPanel} onClick={() => navigate('/student/proposals')} style={{ animationDelay: '0.2s' }}>
+          <FileText size={56} className={`${iconStyle} group-hover:text-pink-400`} />
+          <h2 className={`${titleStyle} group-hover:text-pink-100`}>Project Proposals</h2>
+        </div>
+
+        <div className={glassPanel} onClick={() => navigate('/student/teams')} style={{ animationDelay: '0.3s' }}>
+          <Users size={56} className={`${iconStyle} group-hover:text-emerald-400`} />
+          <h2 className={`${titleStyle} group-hover:text-emerald-100`}>Teams</h2>
+        </div>
+
+        <div className={glassPanel} onClick={() => navigate('/student/reflections')} style={{ animationDelay: '0.4s' }}>
+          <CheckCircle size={56} className={`${iconStyle} group-hover:text-purple-400`} />
+          <h2 className={`${titleStyle} group-hover:text-purple-100`}>Weekly Reflection</h2>
+        </div>
+
+        <div className={glassPanel} onClick={() => navigate('/student/preferences')} style={{ animationDelay: '0.5s' }}>
+          <FilePlus size={56} className={`${iconStyle} group-hover:text-orange-400`} />
+          <h2 className={`${titleStyle} group-hover:text-orange-100`}>Submit a Project Proposal</h2>
+        </div>
+
+        <div className={glassPanel} onClick={() => navigate('/student/tips')} style={{ animationDelay: '0.6s' }}>
+          <Lightbulb size={56} className={`${iconStyle} group-hover:text-yellow-400`} />
+          <h2 className={`${titleStyle} group-hover:text-yellow-100`}>Tips & Tricks</h2>
+        </div>
       </div>
     </div>
   );

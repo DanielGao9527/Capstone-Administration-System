@@ -25,6 +25,9 @@ public class StudentProfile {
     /**加权平均分 (WAN)*/
     private BigDecimal wan;
     
+    /**所属课程ID（多课程隔离）*/
+    private Long courseId;
+    
     /**所属队伍ID*/
     private Long teamId;
     

@@ -1,51 +1,127 @@
 @import "tailwindcss";
 
-:root {
-  --primary-bg: #f8fafc;
-  --cas-green: #4CAF50; /* Approximating the bright green from prototypes */
-  --cas-green-dark: #388E3C;
-  --cas-blue: #3b82f6; 
-  --text-main: #334155;
+/* Typography */
+.heading {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; color: white; text-align: center;
+  white-space: nowrap; pointer-events: none;
+  font-family: "Syne", sans-serif;
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1;
+}
+
+/* Custom Cursor */
+.custom-cursor {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 2px solid white; border-radius: 50%;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-width 0.2s ease, background-color 0.2s ease;
+  background: transparent;
+  will-change: transform;
+}
+.custom-cursor::before {
+  content: "";
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px; height: 8px;
+  background: white; border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
 body {
-  background-color: var(--primary-bg);
-  color: var(--text-main);
-  font-family: 'Segoe UI', 'Inter', -apple-system, sans-serif;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
+  cursor: none;
+  overflow-x: hidden;
+  margin: 0; padding: 0;
+  background-color: #030712;
+  font-family: 'Inter', sans-serif;
+  color: white;
 }
 
-/* Custom scrollbar for light theme */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+/* Ant Design overrides for Cursor */
+a, button, input, textarea, [role="button"], .ant-btn {
+  cursor: none !important;
 }
 
-/* AntD overrides to match the clean flat look from screenshots */
-.ant-table-wrapper .ant-table-thead > tr > th {
-  background: #f1f5f9 !important;
-  font-weight: 600 !important;
-  color: #334155 !important;
-  font-size: 13px;
+/* The Glass Panel Array */
+.color-adjuster-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px; padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
-.ant-table-wrapper .ant-table-tbody > tr > td {
-  font-size: 13px;
+
+.color-btn, .export-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px; color: white;
+  font-family: "Syne", sans-serif; font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  transition: all 0.3s ease; backdrop-filter: blur(10px);
 }
-.ant-btn-primary {
-  background-color: var(--cas-green) !important;
+.color-btn:hover, .export-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
 }
-.ant-btn-primary:hover {
-  background-color: var(--cas-green-dark) !important;
+.color-btn.active {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.panel-input {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  font-family: "Inter", sans-serif;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.panel-input:focus, .panel-input:hover {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* WebGL-like Liquid Fluid Background Simulation */
+.webgl-fluid-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 0; overflow: hidden; pointer-events: none;
+  background-color: #050015; /* deep space base, dark purpleish */
+}
+.fluid-blob {
+  position: absolute; border-radius: 50%;
+  mix-blend-mode: screen;
+}
+.fluid-blob-1 {
+  top: -20%; left: -10%; width: 70vw; height: 70vw;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0) 70%);
+  filter: blur(60px); animation: fluid-flow-1 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fluid-blob-2 {
+  bottom: -20%; right: -10%; width: 80vw; height: 80vw;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, rgba(14, 165, 233, 0) 70%);
+  filter: blur(80px); animation: fluid-flow-2 15s infinite alternate-reverse cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fluid-blob-3 {
+  top: 20%; left: 30%; width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.6) 0%, rgba(236, 72, 153, 0) 70%);
+  filter: blur(70px); animation: fluid-flow-3 20s infinite linear;
+}
+
+@keyframes fluid-flow-1 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; }
+  100% { transform: translate(15vw, 15vh) scale(1.3) rotate(90deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+@keyframes fluid-flow-2 {
+  0% { transform: translate(0, 0) scale(1.2) rotate(0deg); border-radius: 50% 50% 30% 70% / 50% 40% 70% 50%; }
+  100% { transform: translate(-20vw, -10vh) scale(1) rotate(-90deg); border-radius: 30% 70% 60% 40% / 40% 60% 50% 70%; }
+}
+@keyframes fluid-flow-3 {
+  0% { transform: translate(0, 0) scale(0.9) rotate(0deg); border-radius: 60% 30% 50% 50% / 50% 60% 40% 40%; }
+  50% { transform: translate(20vw, -20vh) scale(1.4) rotate(180deg); border-radius: 40% 50% 60% 40% / 60% 40% 50% 50%; }
+  100% { transform: translate(0, 0) scale(0.9) rotate(360deg); border-radius: 60% 30% 50% 50% / 50% 60% 40% 40%; }
 }

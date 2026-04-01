@@ -22,6 +22,11 @@ public class WeeklyReflectionServiceImpl extends ServiceImpl<WeeklyReflectionMap
             reflection.setReflectionDetails(Jsoup.clean(reflection.getReflectionDetails(), Safelist.relaxed()));
         }
 
+        // 新增：对每周项目进度报告进行 XSS 富文本清洗
+        if (reflection.getStatusReport() != null) {
+            reflection.setStatusReport(Jsoup.clean(reflection.getStatusReport(), Safelist.relaxed()));
+        }
+
         LocalDateTime nowUtc = LocalDateTime.now(ZoneOffset.UTC);
         reflection.setCreatedAt(nowUtc);
         reflection.setUpdatedAt(nowUtc);

@@ -29,8 +29,11 @@ public class Team {
     /**队伍整体平均成绩分*/
     private BigDecimal averageWan;
 
-    /**防随意离队锁（Admin控）*/
-    private Boolean isLocked;
+    /**所属课程ID（多课程隔离）*/
+    private Long courseId;
+    
+    /**队伍代表联络人 (Point of Contact ID)*/
+    private Long pointOfContactId;
     
     /**创建时间（默认UTC存储）*/
     private LocalDateTime createdAt;
