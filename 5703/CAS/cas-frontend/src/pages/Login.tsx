@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, message, Alert } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../api/axios';
 import FluidBackground from '../components/FluidBackground';
 import { SYSTEM_MESSAGES } from '../constants/SystemMessages';
 
@@ -68,7 +68,7 @@ const Login = () => {
     setLoading(true);
     setErrorMsg('');
     try {
-      const resp = await axios.post('http://localhost:8080/api/v1/auth/login', { email, password });
+      const resp = await api.post('/auth/login', { email, password });
       const returnedRole = resp.data.role;
       
       localStorage.setItem('cas_token', resp.data.token);
