@@ -72,7 +72,8 @@ public class DataSeeder implements CommandLineRunner {
         boolean seededStudents = false;
 
         // Automatically inject Test STUDENT 1
-        User student1 = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, "student1@sydney.edu.au"));
+        User student1 = userMapper
+                .selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, "student1@sydney.edu.au"));
         if (student1 == null) {
             student1 = new User();
             student1.setEmail("student1@sydney.edu.au");
@@ -97,7 +98,8 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         // Automatically inject Test STUDENT 2
-        User student2 = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, "student2@sydney.edu.au"));
+        User student2 = userMapper
+                .selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, "student2@sydney.edu.au"));
         if (student2 == null) {
             student2 = new User();
             student2.setEmail("student2@sydney.edu.au");
@@ -122,14 +124,16 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         if (seededStudents) {
-            System.out.println("====== [DEV] SYSTEM: Student 1 & 2 automatically seeded into Team 999 (pw: 123456) ======");
+            System.out.println(
+                    "====== [DEV] SYSTEM: Student 1 & 2 automatically seeded into Team 999 (pw: 123456) ======");
         }
 
         // 自动装载两条基础技巧指引，方便前端页面直接展现样式
         if (tipsAndTricksMapper.selectCount(null) == 0) {
             TipsAndTricks tip1 = new TipsAndTricks();
             tip1.setTitle("How to form a successful Capstone team?");
-            tip1.setContent("Start by identifying members with complementary skills. You will need a mix of frontend, backend, and project management capabilities. Don't rush into assigning roles; communicate openly first!");
+            tip1.setContent(
+                    "Start by identifying members with complementary skills. You will need a mix of frontend, backend, and project management capabilities. Don't rush into assigning roles; communicate openly first!");
             tip1.setTag("Teamwork");
             tip1.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
             tip1.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
@@ -137,7 +141,8 @@ public class DataSeeder implements CommandLineRunner {
 
             TipsAndTricks tip2 = new TipsAndTricks();
             tip2.setTitle("Where to look for previous project repos?");
-            tip2.setContent("Check the official Canvas shell for the 'Past Archives' module. Make sure to adhere to the academic honesty policy when referencing old architectures.");
+            tip2.setContent(
+                    "Check the official Canvas shell for the 'Past Archives' module. Make sure to adhere to the academic honesty policy when referencing old architectures.");
             tip2.setTag("General");
             tip2.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
             tip2.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
@@ -180,7 +185,7 @@ public class DataSeeder implements CommandLineRunner {
             p3.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
             p3.setUpdatedAt(LocalDateTime.now(ZoneOffset.UTC));
             projectProposalMapper.insert(p3);
-            
+
             System.out.println("====== SYSTEM: 3 Mock Proposals seeded into database ======");
         }
     }
