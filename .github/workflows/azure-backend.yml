@@ -22,10 +22,11 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -f 5703/CAS/cas-backend/pom.xml clean package -DskipTests
+        run: mvn clean package -DskipTests
+        working-directory: 5703/CAS/cas-backend
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'cas-backend-team32'
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
